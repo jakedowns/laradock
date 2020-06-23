@@ -1333,6 +1333,17 @@ RUN if [ ${INSTALL_XMLRPC} = true ]; then \
 ;fi
 
 ###########################################################################
+# AWSCLI:
+###########################################################################
+ARG INSTALL_AWSCLI=false
+
+RUN if [ ${INSTALL_AWSCLI} = true ]; then \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install \
+;fi
+
+###########################################################################
 # Check PHP version:
 ###########################################################################
 
