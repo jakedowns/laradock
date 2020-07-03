@@ -1,8 +1,9 @@
+._*
+.~lock.*
+.DS_Store
 .idea
+nbproject
+.project
+.settings
 composer.lock
-vendor
-vendor_php
-builds/
-tests/vendor/
-.rr-sample.yaml
-psr-worker.php
+vendor/

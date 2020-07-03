@@ -1,27 +1,19 @@
-FROM golang:1.14.3 as builder
+FROM golang:1.14.3
 
-COPY . /src
-
-WORKDIR /src
+ADD ./bin/rr /usr/bin/rr
+COPY ./rr.yaml /etc/rr.yaml
+COPY ./entrypoint.sh /entrypoint.sh
+ADD ./entrypoint.sh /opt/entrypoint.sh
 
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y bash git \
     && go version \
-    && bash ./build.sh \
-    && test -f ./.rr.yaml
+    # && bash ./build.sh \
+    && test -f /usr/bin/rr \
+    && test -f /etc/rr.yaml \
+    && test -f /entrypoint.sh
 
-FROM alpine:latest
+CMD ["/bin/bash", "/opt/entrypoint.sh"]
 
-LABEL \
-    org.opencontainers.image.title="roadrunner" \
-    org.opencontainers.image.description="High-performance PHP application server, load-balancer and process manager" \
-    org.opencontainers.image.url="https://github.com/spiral/roadrunner" \
-    org.opencontainers.image.source="https://github.com/spiral/roadrunner" \
-    org.opencontainers.image.vendor="SpiralScout" \
-    org.opencontainers.image.licenses="MIT"
-
-COPY --from=builder /src/rr /usr/bin/rr
-COPY --from=builder /src/.rr.yaml /etc/rr.yaml
-
-ENTRYPOINT ["/usr/bin/rr"]
+EXPOSE 8081

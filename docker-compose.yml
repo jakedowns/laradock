@@ -472,20 +472,12 @@ services:
     roadrunner:
       build: ./roadrunner
       volumes:
-        - ./roadrunner/rr.yaml:/usr/local/etc/roadrunner/rr.yaml
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
       expose:
         - "8081"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
-      environment:
-        - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-        - DOCKER_HOST=tcp://docker-in-docker:2376
-        - DOCKER_TLS_VERIFY=1
-        - DOCKER_TLS_CERTDIR=/certs
-        - DOCKER_CERT_PATH=/certs/client
-        - FAKETIME=${PHP_FPM_FAKETIME}
       depends_on:
         - workspace
       networks:
