@@ -151,12 +151,11 @@ services:
           - https_proxy
           - no_proxy
       volumes:
-        #- ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
         - ./php-worker/supervisord.d:/etc/supervisord.d
         - ${DOT_AWS_DIR_PATH_HOST}:/root/.aws
-        - ~/.ssh:/ssh_keys/
-        - ~/LinuxBindMounted:/var/www
+        - /root/.ssh:/root/.ssh/
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
@@ -253,7 +252,7 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
       expose:
-        - "9000"
+        - "9001"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       environment:
@@ -458,8 +457,41 @@ services:
         - php-fpm
         - php-fpm-7.2
       networks:
-        - frontend
+        frontend:
+          aliases:
+            - api.wright20.site
+            - wright20.site
+            - cms.wright20.site
+        backend:
+          aliases:
+            - api.wright20.site
+            - wright20.site
+            - cms.wright20.site
+
+### ROADRUNNER Server #########################################
+    roadrunner:
+      build: ./roadrunner
+      volumes:
+        - ./roadrunner/rr.yaml:/usr/local/etc/roadrunner/rr.yaml
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - docker-in-docker:/certs/client
+      expose:
+        - "8081"
+      extra_hosts:
+        - "dockerhost:${DOCKER_HOST_IP}"
+      environment:
+        - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+        - DOCKER_HOST=tcp://docker-in-docker:2376
+        - DOCKER_TLS_VERIFY=1
+        - DOCKER_TLS_CERTDIR=/certs
+        - DOCKER_CERT_PATH=/certs/client
+        - FAKETIME=${PHP_FPM_FAKETIME}
+      depends_on:
+        - workspace
+      networks:
         - backend
+      links:
+        - docker-in-docker
 
 ### MySQL ################################################
     mysql:
@@ -591,10 +623,11 @@ services:
         - elasticsearch:/usr/share/elasticsearch/data
       environment:
         - cluster.name=laradock-cluster
-        - node.name=laradock-node
+        # - node.name=laradock-node
+        - xpack.security.enabled=false
         - bootstrap.memory_lock=true
         - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        - cluster.initial_master_nodes=laradock-node
+        # - cluster.initial_master_nodes=laradock-node
       ulimits:
         memlock:
           soft: -1

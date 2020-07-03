@@ -1,0 +1,27 @@
+http:
+    address: 0.0.0.0:8081
+    workers:
+      command: "php ./vendor/bin/rr-worker"
+      user: "vagrant"
+      pool:
+        numWorkers: 1
+        maxJobs: 0
+    # ssl:
+    #   redirect: true
+    # http2:
+    #   enabled: true
+    #   maxConcurrentStreams: 128
+    maxRequestSize: 200
+    uploads:
+      forbid: [".php", ".exe", ".bat", ".sh"]
+  static:
+    dir: "public"
+  headers:
+    # Middleware to handle CORS requests, https://www.w3.org/TR/cors/
+    cors:
+      allowedOrigin: "*"
+      allowedHeaders: "*"
+      allowedMethods: "GET,POST,PUT,DELETE"
+      allowCredentials: true
+      exposedHeaders: "Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma"
+      #maxAge: 600
