@@ -1,19 +1,31 @@
-FROM golang:1.14.3
+FROM php:7.3-cli
 
-ADD ./bin/rr /usr/bin/rr
-COPY ./rr.yaml /etc/rr.yaml
-COPY ./entrypoint.sh /entrypoint.sh
-ADD ./entrypoint.sh /opt/entrypoint.sh
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  vim \
+  libzip-dev \
+  unzip
 
-RUN set -x \
-    && apt-get update -y \
-    && apt-get install -y bash git \
-    && go version \
-    # && bash ./build.sh \
-    && test -f /usr/bin/rr \
-    && test -f /etc/rr.yaml \
-    && test -f /entrypoint.sh
+# Install PHP Extensions
+RUN docker-php-ext-install zip \
+  && docker-php-ext-install opcache \
+  && docker-php-ext-enable opcache
 
-CMD ["/bin/bash", "/opt/entrypoint.sh"]
+# Install Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+  && php composer-setup.php \
+  && php -r "unlink('composer-setup.php');" \
+  && mv composer.phar /usr/local/bin/composer
 
-EXPOSE 8081
+# Download RoadRunner
+ENV RR_VERSION 1.8.1
+RUN mkdir /tmp/rr \
+  && cd /tmp/rr \
+  && echo "{\"require\":{\"spiral/roadrunner\":\"${RR_VERSION}\"}}" >> composer.json \
+  && composer install \
+  && vendor/bin/rr get-binary -l /usr/local/bin \
+  && rm -rf /tmp/rr
+
+WORKDIR /var/www/wright/ams
+
+ENTRYPOINT ["/usr/local/bin/rr", "serve", "-d", "-c", "/etc/roadrunner/.rr.yaml"]

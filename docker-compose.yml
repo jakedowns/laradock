@@ -472,8 +472,11 @@ services:
     roadrunner:
       build: ./roadrunner
       volumes:
+        - ./roadrunner/etc/roadrunner:/etc/roadrunner:cached
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
+      ports:
+        - 8081:8081
       expose:
         - "8081"
       extra_hosts:
