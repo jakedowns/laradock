@@ -456,17 +456,22 @@ services:
       depends_on:
         - php-fpm
         - php-fpm-7.2
+        - roadrunner
       networks:
         frontend:
           aliases:
             - api.wright20.site
             - wright20.site
             - cms.wright20.site
+            - cdn.wright20.site
+            - live.wright20.site
         backend:
           aliases:
             - api.wright20.site
             - wright20.site
             - cms.wright20.site
+            - live.wright20.site
+            - cdn.wright20.site
 
 ### ROADRUNNER Server #########################################
     roadrunner:

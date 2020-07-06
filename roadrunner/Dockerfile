@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM php:7.4.7-cli
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   vim \
@@ -26,6 +26,20 @@ RUN mkdir /tmp/rr \
   && vendor/bin/rr get-binary -l /usr/local/bin \
   && rm -rf /tmp/rr
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+RUN install-php-extensions xdebug mysqli pdo_mysql pgsql pdo_pgsql opcache redis memcached
+
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
+    PHP_OPCACHE_MEMORY_CONSUMPTION="1000" \
+    PHP_OPCACHE_MAX_WASTED_PERCENTAGE="5"
+COPY ./etc/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
 WORKDIR /var/www/wright/ams
 
+#RUN cd /var/www/wright/ams; composer install
+
+EXPOSE 8081
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["/usr/local/bin/rr", "serve", "-d", "-c", "/etc/roadrunner/.rr.yaml"]
