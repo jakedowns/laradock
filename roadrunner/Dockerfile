@@ -3,6 +3,8 @@ FROM php:7.4.7-cli
 RUN apt-get update && apt-get install -y --no-install-recommends \
   vim \
   libzip-dev \
+  htop \
+  nano \
   unzip
 
 # Install PHP Extensions

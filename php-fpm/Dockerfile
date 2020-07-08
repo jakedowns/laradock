@@ -38,7 +38,7 @@ RUN set -xe; \
     apt-get update -yqq && \
     pecl channel-update pecl.php.net && \
     apt-get install -yqq \
-      apt-utils \
+      apt-utils nano htop iputils-ping \
       #
       #--------------------------------------------------------------------------
       # Mandatory Software's Installation
