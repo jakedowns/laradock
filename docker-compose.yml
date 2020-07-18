@@ -251,6 +251,8 @@ services:
         - ./php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
+        - ${DOT_AWS_DIR_PATH_HOST}:/root/.aws
+        - /root/.ssh:/root/.ssh/
       expose:
         - "9000"
       extra_hosts:
@@ -460,13 +462,15 @@ services:
       networks:
         frontend:
           aliases:
+            - ams.wright20.site
             - api.wright20.site
             - wright20.site
             - cms.wright20.site
-            - cdn.wright20.site
             - live.wright20.site
+            - cdn.wright20.site
         backend:
           aliases:
+            - ams.wright20.site
             - api.wright20.site
             - wright20.site
             - cms.wright20.site

@@ -1,0 +1,1 @@
+* * * * * laradock /usr/local/bin/php /var/www/wright/ams/artisan schedule:run >> /dev/null 2>&1
