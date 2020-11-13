@@ -38,7 +38,7 @@ git submodule add https://github.com/Laradock/laradock.git
 
 Note: If you are not using Git yet for your project, you can use `git clone` instead of `git submodule `.
 
-*To keep track of your Laradock changes, between your projects and also keep Laradock updated [check these docs](/documentation/#keep-track-of-your-laradock-changes)*
+*To keep track of your Laradock changes, between your projects and also keep Laradock updated [check these docs](/documentation/#track-your-laradock-changes)*
 
 
 2 - Make sure your folder structure should look like this:
@@ -109,7 +109,7 @@ Your folder structure should look like this:
 
 2 - Go to your web server and create config files to point to different project directory when visiting different domains:
 
-For **Nginx** go to `nginx/sites`, for **Apache2** `apache2/sites`. 
+For **Nginx** go to `nginx/sites`, for **Apache2** `apache2/sites`.
 
 Laradock by default includes some sample files for you to copy `app.conf.example`, `laravel.conf.example` and `symfony.conf.example`.
 
@@ -147,7 +147,7 @@ If you are using **Docker Toolbox** (VM), do one of the following:
 
 <br>
 
-We recommend using a Docker version which is newer than 1.13. 
+We recommend using a Docker version which is newer than 1.13.
 
 <br>
 
@@ -196,7 +196,7 @@ docker-compose exec workspace bash
 docker exec -it {workspace-container-id} bash
 ```
 
-**Note:** You can add `--user=laradock` to have files created as your host's user. Example: 
+**Note:** You can add `--user=laradock` to have files created as your host's user. Example:
 
 ```shell
 docker-compose exec --user=laradock workspace bash
@@ -213,13 +213,13 @@ Open your PHP project's `.env` file or whichever configuration file you are read
 DB_HOST=mysql
 ```
 
-You need to use the Laradock's default DB credentials which can be found in the `.env` file (ex: `MYSQL_USER=`). 
-Or you can change them and rebuild the container.  
+You need to use the Laradock's default DB credentials which can be found in the `.env` file (ex: `MYSQL_USER=`).
+Or you can change them and rebuild the container.
 
 *If you want to install Laravel as PHP project, see [How to Install Laravel in a Docker Container](#Install-Laravel).*
 
 <br>
-5 - Open your browser and visit your localhost address. 
+5 - Open your browser and visit your localhost address.
 
 Make sure you add use the right port number as provided by your running server.
 
@@ -229,4 +229,4 @@ If you followed the multiple projects setup, you can visit `http://project-1.tes
 
 
 
- 
+
