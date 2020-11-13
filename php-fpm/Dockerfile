@@ -938,6 +938,16 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm /var/log/lastlog /var/log/faillog
 
+# Add a non-root user:
+ARG PUID=1002
+ENV PUID ${PUID}
+ARG PGID=1002
+ENV PGID ${PGID}
+
+RUN groupadd -g ${PGID} laradock && \
+    useradd -u ${PUID} -g laradock -m laradock -G laradock && \
+    usermod -p "*" laradock -s /bin/bash
+
 # Configure non-root user.
 ARG PUID=1000
 ENV PUID ${PUID}
